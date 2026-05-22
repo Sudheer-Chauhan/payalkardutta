@@ -70,6 +70,68 @@ const SectionLabel = ({ children, center }) => (
   </div>
 );
 
+// Journey item component to properly use hooks
+const JourneyItem = ({ item, index, isLast }) => {
+  const [ref, on] = useFade();
+  
+  return (
+    <div ref={ref} style={{ display: "flex", gap: 22, marginBottom: isLast ? 0 : 40 }}>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", minWidth: 16 }}>
+        <div style={{
+          width: 10, height: 10, borderRadius: "50%",
+          border: `1.5px solid ${on ? C.gold : C.dim}`,
+          background: on ? C.gold : "transparent",
+          flexShrink: 0, marginTop: 5,
+          transition: "all 0.5s ease",
+        }} />
+        {!isLast && <div style={{ width: 1, flex: 1, background: `linear-gradient(${C.border}, transparent)`, marginTop: 8 }} />}
+      </div>
+      <div style={{
+        opacity: on ? 1 : 0,
+        transform: on ? "none" : "translateY(10px)",
+        transition: `opacity 0.7s ease ${index * 60}ms, transform 0.7s ease ${index * 60}ms`,
+        paddingBottom: 8,
+      }}>
+        <div style={{ fontSize: 8, letterSpacing: 4, color: C.gold, textTransform: "uppercase", marginBottom: 6 }}>{item.year}</div>
+        <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 18, color: C.white, fontWeight: 400, marginBottom: 6 }}>{item.title}</div>
+        <div style={{ fontSize: 12, lineHeight: 1.85, color: C.muted }}>{item.desc}</div>
+      </div>
+    </div>
+  );
+};
+
+// Service card component
+const ServiceCard = ({ icon, title, desc, index, mobile }) => {
+  const [hov, setHov] = useState(false);
+  const [ref, on] = useFade();
+  
+  return (
+    <div ref={ref}>
+      <div
+        onMouseEnter={() => setHov(true)}
+        onMouseLeave={() => setHov(false)}
+        style={{
+          padding: mobile ? "28px 24px" : "34px 28px",
+          background: hov ? C.bg : C.bg2,
+          borderBottom: `1.5px solid ${hov ? C.gold : "transparent"}`,
+          transition: "all 0.3s ease",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          opacity: on ? 1 : 0,
+          transform: on ? "none" : "translateY(18px)",
+          transition: `opacity 0.85s cubic-bezier(.4,0,.2,1) ${index * 55}ms,
+                       transform 0.85s cubic-bezier(.4,0,.2,1) ${index * 55}ms`,
+        }}
+      >
+        <div style={{ fontSize: 20, marginBottom: 14 }}>{icon}</div>
+        <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 17, color: C.white, fontWeight: 400, marginBottom: 8 }}>{title}</div>
+        <div style={{ fontSize: 12, lineHeight: 1.8, color: C.muted }}>{desc}</div>
+      </div>
+    </div>
+  );
+};
+
 /* ── nav ────────────────────────────────────────────────── */
 const Nav = () => {
   const mobile = useMobile();
@@ -186,6 +248,29 @@ export default function PayalKarDutta() {
 
   const px    = mobile ? "24px" : "56px";
   const secPy = mobile ? "72px" : "100px";
+
+  const journeyItems = [
+    { year: "2014", title: "Entering the Arena",   desc: "Began her real estate career in Hyderabad, building a reputation for market acumen and a client-first approach." },
+    { year: "2018", title: "Founding Veva Realty", desc: "Launched Veva Realty to bring world-class advisory standards to Indian real estate. Expanded rapidly across Hyderabad's premium corridors." },
+    { year: "2020", title: "VSpaces by Veva",      desc: "Launched VSpaces — a curated platform for ultra-premium residential and commercial clients." },
+    { year: "2022", title: "Multi-City Expansion", desc: "Expanded to Bengaluru and Kolkata. Partnered with Godrej Properties, Sattva Group, and TVS Emerald." },
+    { year: "2024", title: "Industry Recognition", desc: "Recognised as one of India's most influential real estate leaders and a mentor shaping the next generation.", last: true },
+  ];
+
+  const services = [
+    ["🏛","Residential Advisory","Curated homes across Hyderabad's most prestigious addresses — Jubilee Hills, Kokapet, and beyond."],
+    ["📐","Commercial Strategy","Data-driven advisory for premium office spaces and high-yield assets in India's top IT corridors."],
+    ["📈","Investment Advisory","Portfolio-level strategy for HNIs building diversified real estate assets with strong returns."],
+    ["🌐","NRI Services","Specialised guidance for the Indian diaspora navigating regulatory frameworks and prime opportunities."],
+    ["🤝","Developer Partnerships","Alliance with Godrej, Sattva, TVS Emerald — clients access the finest inventory before public launch."],
+    ["🎓","Mentorship","Empowering aspiring real estate professionals through structured guidance and thought leadership."],
+  ];
+
+  const testimonials = [
+    ["Payal's guidance transformed my investment approach. Her market insights are unparalleled.", "Rahul Mehta", "Entrepreneur, Hyderabad"],
+    ["Working with Veva Realty was a masterclass in professionalism. Exceeded every expectation.", "Priya Shankar", "Tech Executive, Bengaluru"],
+    ["Her strategic vision helped our family make the best financial decision of our lives.", "Vikram Das", "NRI Investor, Dubai"],
+  ];
 
   return (
     <div style={{ background: C.bg, color: C.text, fontFamily: "'Inter',sans-serif", overflowX: "hidden" }}>
@@ -443,39 +528,9 @@ export default function PayalKarDutta() {
           </div>
 
           <div style={{ paddingTop: 4 }}>
-            {[
-              { year: "2014", title: "Entering the Arena",   desc: "Began her real estate career in Hyderabad, building a reputation for market acumen and a client-first approach." },
-              { year: "2018", title: "Founding Veva Realty", desc: "Launched Veva Realty to bring world-class advisory standards to Indian real estate. Expanded rapidly across Hyderabad's premium corridors." },
-              { year: "2020", title: "VSpaces by Veva",      desc: "Launched VSpaces — a curated platform for ultra-premium residential and commercial clients." },
-              { year: "2022", title: "Multi-City Expansion", desc: "Expanded to Bengaluru and Kolkata. Partnered with Godrej Properties, Sattva Group, and TVS Emerald." },
-              { year: "2024", title: "Industry Recognition", desc: "Recognised as one of India's most influential real estate leaders and a mentor shaping the next generation.", last: true },
-            ].map((item, i) => {
-              const [ref, on] = useFade();
-              return (
-                <div ref={ref} key={item.year} style={{ display: "flex", gap: 22, marginBottom: item.last ? 0 : 40 }}>
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", minWidth: 16 }}>
-                    <div style={{
-                      width: 10, height: 10, borderRadius: "50%",
-                      border: `1.5px solid ${on ? C.gold : C.dim}`,
-                      background: on ? C.gold : "transparent",
-                      flexShrink: 0, marginTop: 5,
-                      transition: "all 0.5s ease",
-                    }} />
-                    {!item.last && <div style={{ width: 1, flex: 1, background: `linear-gradient(${C.border}, transparent)`, marginTop: 8 }} />}
-                  </div>
-                  <div style={{
-                    opacity: on ? 1 : 0,
-                    transform: on ? "none" : "translateY(10px)",
-                    transition: `opacity 0.7s ease ${i * 60}ms, transform 0.7s ease ${i * 60}ms`,
-                    paddingBottom: 8,
-                  }}>
-                    <div style={{ fontSize: 8, letterSpacing: 4, color: C.gold, textTransform: "uppercase", marginBottom: 6 }}>{item.year}</div>
-                    <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 18, color: C.white, fontWeight: 400, marginBottom: 6 }}>{item.title}</div>
-                    <div style={{ fontSize: 12, lineHeight: 1.85, color: C.muted }}>{item.desc}</div>
-                  </div>
-                </div>
-              );
-            })}
+            {journeyItems.map((item, i) => (
+              <JourneyItem key={item.year} item={item} index={i} isLast={i === journeyItems.length - 1} />
+            ))}
           </div>
         </div>
       </section>
@@ -493,38 +548,9 @@ export default function PayalKarDutta() {
             gridTemplateColumns: mobile ? "1fr" : "repeat(3,1fr)",
             gap: 1, background: C.border,
           }}>
-            {[
-              ["🏛","Residential Advisory","Curated homes across Hyderabad's most prestigious addresses — Jubilee Hills, Kokapet, and beyond."],
-              ["📐","Commercial Strategy","Data-driven advisory for premium office spaces and high-yield assets in India's top IT corridors."],
-              ["📈","Investment Advisory","Portfolio-level strategy for HNIs building diversified real estate assets with strong returns."],
-              ["🌐","NRI Services","Specialised guidance for the Indian diaspora navigating regulatory frameworks and prime opportunities."],
-              ["🤝","Developer Partnerships","Alliance with Godrej, Sattva, TVS Emerald — clients access the finest inventory before public launch."],
-              ["🎓","Mentorship","Empowering aspiring real estate professionals through structured guidance and thought leadership."],
-            ].map(([icon, title, desc], i) => {
-              const [hov, setHov] = useState(false);
-              return (
-                <F key={title} d={mobile ? 0 : i * 55}>
-                  <div
-                    onMouseEnter={() => setHov(true)}
-                    onMouseLeave={() => setHov(false)}
-                    style={{
-                      padding: mobile ? "28px 24px" : "34px 28px",
-                      background: hov ? C.bg : C.bg2,
-                      borderBottom: `1.5px solid ${hov ? C.gold : "transparent"}`,
-                      transition: "all 0.3s ease",
-
-                      height: "100%", // ADD THIS
-                      display: "flex", // ADD THIS
-                      flexDirection: "column", // ADD THIS
-                    }}
-                  >
-                    <div style={{ fontSize: 20, marginBottom: 14 }}>{icon}</div>
-                    <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 17, color: C.white, fontWeight: 400, marginBottom: 8 }}>{title}</div>
-                    <div style={{ fontSize: 12, lineHeight: 1.8, color: C.muted }}>{desc}</div>
-                  </div>
-                </F>
-              );
-            })}
+            {services.map(([icon, title, desc], i) => (
+              <ServiceCard key={title} icon={icon} title={title} desc={desc} index={i} mobile={mobile} />
+            ))}
           </div>
         </div>
       </section>
@@ -541,11 +567,7 @@ export default function PayalKarDutta() {
           gridTemplateColumns: mobile ? "1fr" : "repeat(3,1fr)",
           gap: mobile ? 16 : 12,
         }}>
-          {[
-            ["Payal's guidance transformed my investment approach. Her market insights are unparalleled.", "Rahul Mehta", "Entrepreneur, Hyderabad"],
-            ["Working with Veva Realty was a masterclass in professionalism. Exceeded every expectation.", "Priya Shankar", "Tech Executive, Bengaluru"],
-            ["Her strategic vision helped our family make the best financial decision of our lives.", "Vikram Das", "NRI Investor, Dubai"],
-          ].map(([q,n,r], i) => (
+          {testimonials.map(([q,n,r], i) => (
             <F key={n} d={mobile ? 0 : i * 80}>
               <div style={{
                 padding: "28px 24px",
