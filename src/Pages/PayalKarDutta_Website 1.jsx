@@ -101,6 +101,7 @@ const JourneyItem = ({ item, index, isLast }) => {
 };
 
 // Service card component
+// Service card component
 const ServiceCard = ({ icon, title, desc, index, mobile }) => {
   const [hov, setHov] = useState(false);
   const [ref, on] = useFade();
@@ -114,14 +115,15 @@ const ServiceCard = ({ icon, title, desc, index, mobile }) => {
           padding: mobile ? "28px 24px" : "34px 28px",
           background: hov ? C.bg : C.bg2,
           borderBottom: `1.5px solid ${hov ? C.gold : "transparent"}`,
-          transition: "all 0.3s ease",
           height: "100%",
           display: "flex",
           flexDirection: "column",
           opacity: on ? 1 : 0,
           transform: on ? "none" : "translateY(18px)",
           transition: `opacity 0.85s cubic-bezier(.4,0,.2,1) ${index * 55}ms,
-                       transform 0.85s cubic-bezier(.4,0,.2,1) ${index * 55}ms`,
+                       transform 0.85s cubic-bezier(.4,0,.2,1) ${index * 55}ms,
+                       background 0.3s ease,
+                       border-bottom 0.3s ease`,
         }}
       >
         <div style={{ fontSize: 20, marginBottom: 14 }}>{icon}</div>
