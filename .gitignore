@@ -10,6 +10,8 @@
 
 # production
 /build
+/build-check
+/build-verify-*
 
 # misc
 .DS_Store
